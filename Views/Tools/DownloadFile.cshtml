@@ -1,0 +1,21 @@
+﻿@{
+    var downloadFile = TempData["DownloadFile"]?.ToString();
+    var successMsg = TempData["Success"]?.ToString();
+}
+
+@if (!string.IsNullOrEmpty(successMsg))
+{
+    <div class="alert alert-success mt-3">
+        @successMsg
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(downloadFile))
+{
+    <div class="mt-3 text-center">
+        <a href="@Url.Action("DownloadFile", "Tools", new { fileName = downloadFile })"
+           class="btn btn-success">
+            Download Word File
+        </a>
+    </div>
+}
