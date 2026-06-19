@@ -13,15 +13,14 @@
 
     <div class="collapse show" id="documentTools">
         <div class="submenu">
-            <a href="#">PDF To Word</a>
-            <a href="#">Word To PDF</a>
-            <a href="#">Excel To PDF</a>
-            <a href="#">PDF To Excel</a>
-            <a href="#">PPT To PDF</a>
-            <a href="#">PDF To PPT</a>
+            <a href="@Url.Action("PdfToWord", "Tools")">PDF To Word</a>
+            <a href="@Url.Action("WordToPdf", "Tools")">Word To PDF</a>
+            <a href="@Url.Action("ExcelToPdf", "Tools")">Excel To PDF</a>
+            <a href="@Url.Action("PdfToExcel", "Tools")">PDF To Excel</a>
+            <a href="@Url.Action("PptToPdf", "Tools")">PPT To PDF</a>
+            <a href="@Url.Action("PdfToPpt", "Tools")">PDF To PPT</a>
         </div>
     </div>
-
     <!-- PDF TOOLS -->
 
     <a class="menu-header" data-bs-toggle="collapse" href="#pdfTools">
@@ -58,28 +57,16 @@
 
     <!-- HR TOOLS -->
 
-    <a class="menu-header" data-bs-toggle="collapse" href="#hrTools">
-        👨‍💼 HR Tools
-    </a>
-
-    <div class="collapse" id="hrTools">
-        <div class="submenu">
-            <a href="#">Salary Slip Generator</a>
-            <a href="#">Offer Letter Generator</a>
-            <a href="#">Experience Letter</a>
-            <a href="#">Appointment Letter</a>
-        </div>
-    </div>
-
-    <!-- PREMIUM HRMS -->
-
     <a class="menu-header" data-bs-toggle="collapse" href="#premiumHr">
-        ⭐ Premium HRMS
+        🔒 👨‍💼 HR Tools  <span class="premium-badge">PRO</span>
     </a>
 
     <div class="collapse" id="premiumHr">
         <div class="submenu">
-
+            <a href="#">  🔒 Salary Slip Generator</a>
+            <a href="#">  🔒 Offer Letter Generator</a>
+            <a href="#"> 🔒 Experience Letter</a>
+            <a href="#"> 🔒 Appointment Letter</a>
             <a href="#" class="premium-menu">
                 🔒 Employee Management
                 <span class="premium-badge">PRO</span>
@@ -109,14 +96,17 @@
                 🔒 Employee Self Service
                 <span class="premium-badge">PRO</span>
             </a>
-
         </div>
     </div>
+
+    <!-- PREMIUM HRMS -->
+
+    
 
     <!-- FINANCE -->
 
     <a class="menu-header" data-bs-toggle="collapse" href="#financeTools">
-        💰 Finance Tools
+        💰 Finance Tools  <span class="premium-badge">PRO</span>
     </a>
 
     <div class="collapse" id="financeTools">
@@ -131,14 +121,14 @@
     <!-- BUSINESS -->
 
     <a class="menu-header" data-bs-toggle="collapse" href="#businessTools">
-        🏢 Business Tools
+        🏢 Business Tools  <span class="premium-badge">PRO</span>
     </a>
 
     <div class="collapse" id="businessTools">
         <div class="submenu">
-            <a href="#">Invoice Generator</a>
+           
             <a href="#">Quotation Generator</a>
-            <a href="#">Purchase Order</a>
+           
             <a href="#">Receipt Generator</a>
         </div>
     </div>
