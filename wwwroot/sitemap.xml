@@ -9,4 +9,28 @@
 		<loc>https://anticonvert.in/Tools/PdfToWord</loc>
 	</url>
 
+	<url>
+		<loc>https://anticonvert.in/Tools/WordToPdf</loc>
+	</url>
+
+	<url>
+		<loc>https://anticonvert.in/Tools/ExcelToPdf</loc>
+	</url>
+
+	<url>
+		<loc>https://anticonvert.in/Tools/PdfToExcel</loc>
+	</url>
+
+	<url>
+		<loc>https://anticonvert.in/Tools/PptToPdf</loc>
+	</url>
+
+	<url>
+		<loc>https://anticonvert.in/Tools/PdfToPpt</loc>
+	</url>
+
+	<url>
+		<loc>https://anticonvert.in/Tools/AllConveterDocument</loc>
+	</url>
+
 </urlset>
