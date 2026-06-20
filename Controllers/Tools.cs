@@ -17,28 +17,32 @@ namespace NTConvert.Controllers
 
         public ActionResult WordToPdf()
         {
-            return View("~/Views/ConversionPages.cshtml");
+            ViewBag.Type = "WordToPdf";
+            return View("~/Views/Tools/ConversionPages.cshtml");
         }
 
         public ActionResult ExcelToPdf()
         {
-            return View("~/Views/ConversionPages.cshtml");
+            ViewBag.Type = "ExcelToPdf";
+            return View("~/Views/Tools/ConversionPages.cshtml");
         }
 
         public ActionResult PdfToExcel()
         {
-            ViewBag.Type = "";
-            return View("~/Views/ConversionPages.cshtml");
+            ViewBag.Type = "PdfToExcel";
+            return View("~/Views/Tools/ConversionPages.cshtml");
         }
 
         public ActionResult PptToPdf()
         {
-            return View("~/Views/ConversionPages.cshtml");
+            ViewBag.Type = "PdfToExcel";
+            return View("~/Views/Tools/ConversionPages.cshtml");
         }
 
         public ActionResult PdfToPpt()
         {
-            return View("~/Views/ConversionPages.cshtml");
+            ViewBag.Type = "PdfToExcel";
+            return View("~/Views/Tools/ConversionPages.cshtml");
         }
 
 
