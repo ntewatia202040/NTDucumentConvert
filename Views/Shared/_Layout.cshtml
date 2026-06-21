@@ -1,15 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>@ViewData["Title"] | AntiConvert</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
-    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon.png" asp-append-version="true" />
-    <link rel="apple-touch-icon" href="~/favicon.png" asp-append-version="true" />
 
     <!-- SEO -->
     <meta name="description"
@@ -26,64 +24,140 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/images/logo.png" />
 
-    <!-- Bootstrap -->
+    <title>@ViewData["Title"] | AntiConvert</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon.png" asp-append-version="true" />
+    <link rel="apple-touch-icon" href="~/favicon.png" asp-append-version="true" />
+
+    <!-- SEO -->
+    <meta name="description"
+          content="AntiConvert provides free online PDF, Word, Excel, PowerPoint and Image conversion tools. Fast, secure and easy document conversion." />
+
+    <meta name="keywords"
+          content="PDF to Word, Word to PDF, PDF Tools, Image Tools, Excel To PDF, PDF To Excel, PPT To PDF, AntiConvert" />
+
+    <meta name="author" content="AntiConvert" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="AntiConvert" />
+    <meta property="og:description" content="Free Online Document Conversion Tools" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/logo.png" />
+
+    <!-- CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NTConvert.styles.css" asp-append-version="true" />
+
 
 </head>
 
 <body>
 
-    @await Html.PartialAsync("_Sidebar")
 
-    <div class="main-content">
+    <!-- Mobile Navbar -->
+    <nav class="navbar navbar-dark bg-dark d-lg-none">
+        <div class="container-fluid">
 
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <button class="btn btn-outline-light"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileSidebar"
+                    aria-controls="mobileSidebar">
+                ☰ Menu
+            </button>
 
-        <footer class="text-center mt-5 p-4 border-top">
+            <span class="navbar-brand mb-0 h1">
+                AntiConvert
+            </span>
 
-            <div class="mb-2">
+        </div>
+    </nav>
 
-                <a asp-controller="Home"
-                   asp-action="About"
-                   class="text-decoration-none me-3">
-                    About Us
-                </a>
+    <!-- Mobile Sidebar -->
+    <div class="offcanvas offcanvas-start d-lg-none"
+         tabindex="-1"
+         id="mobileSidebar">
 
-                <a asp-controller="Home"
-                   asp-action="Privacy"
-                   class="text-decoration-none me-3">
-                    Privacy Policy
-                </a>
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">
+                AntiConvert
+            </h5>
 
-                <a asp-controller="Home"
-                   asp-action="Terms"
-                   class="text-decoration-none me-3">
-                    Terms & Conditions
-                </a>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas">
+            </button>
+        </div>
 
-                <a asp-controller="Home"
-                   asp-action="Contact"
-                   class="text-decoration-none">
-                    Contact Us
-                </a>
-
-            </div>
-
-            <p class="mb-0">
-                © @DateTime.Now.Year AntiConvert. All Rights Reserved.
-            </p>
-
-        </footer>
+        <div class="offcanvas-body p-0">
+            @await Html.PartialAsync("_Sidebar")
+        </div>
 
     </div>
 
+    <!-- Main Layout -->
+    <div class="layout-wrapper">
+
+        <!-- Desktop Sidebar -->
+        <aside class="desktop-sidebar d-none d-lg-block">
+            @await Html.PartialAsync("_Sidebar")
+        </aside>
+
+        <!-- Content Area -->
+        <div class="main-content">
+
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+
+            <footer class="text-center mt-5 p-4 border-top">
+
+                <div class="mb-3">
+
+                    <a asp-controller="Home"
+                       asp-action="About"
+                       class="text-decoration-none me-3">
+                        About Us
+                    </a>
+
+                    <a asp-controller="Home"
+                       asp-action="Privacy"
+                       class="text-decoration-none me-3">
+                        Privacy Policy
+                    </a>
+
+                    <a asp-controller="Home"
+                       asp-action="Terms"
+                       class="text-decoration-none me-3">
+                        Terms & Conditions
+                    </a>
+
+                    <a asp-controller="Home"
+                       asp-action="Contact"
+                       class="text-decoration-none">
+                        Contact Us
+                    </a>
+
+                </div>
+
+                <p class="mb-0">
+                    © @DateTime.Now.Year AntiConvert. All Rights Reserved.
+                </p>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    
 
 </body>
 </html>
