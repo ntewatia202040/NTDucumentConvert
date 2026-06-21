@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting.Server;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.PowerBI.Api.Models;
-using Spire.Doc;
-using Spire.Pdf;
-using System.Diagnostics;
-using System.IO.Pipelines;
-using System.Reflection.Metadata;
+using Syncfusion.DocIO;
+using Syncfusion.DocIO.DLS;
+using Syncfusion.DocIORenderer;
+using Syncfusion.Pdf;
+
+
 
 
 
@@ -64,89 +64,118 @@ namespace NTConvert.Controllers
             return View("~/Views/Tools/DownloadFile.cshtml");
         }
 
-
-
-[HttpPost]
-    public IActionResult AllConveter(IFormFile file, string ConversionType)
-    {
-        if (file == null || file.Length == 0)
+        [HttpPost]
+        public IActionResult AllConveter(IFormFile file, string ConversionType)
         {
-            TempData["Success"] = "Please select a file.";
-            return RedirectToAction("AllConveteredDocument",
+            if (file == null || file.Length == 0)
+            {
+                TempData["Success"] = "Please select a file.";
+                return RedirectToAction("AllConveteredDocument",
+                    new { type = ConversionType });
+            }
+
+            string uploadFolder = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "Uploads");
+
+            if (!Directory.Exists(uploadFolder))
+            {
+                Directory.CreateDirectory(uploadFolder);
+            }
+
+            string filePath = Path.Combine(uploadFolder, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            try
+            {
+                //======================== PDF TO WORD ========================
+                if (ConversionType == "Pdf To Word")
+                {
+                    string wordPath = Path.ChangeExtension(filePath, ".docx");
+
+                    Spire.Pdf.PdfDocument pdf = new Spire.Pdf.PdfDocument();
+                    pdf.LoadFromFile(filePath);
+
+                    pdf.SaveToFile(wordPath, Spire.Pdf.FileFormat.DOCX);
+                    pdf.Close();
+
+                    TempData["DownloadFile"] = Path.GetFileName(wordPath);
+                    TempData["Success"] = "PDF converted to Word successfully.";
+
+                    DeleteFileAfter2Minutes(filePath);   // Uploaded PDF
+                    DeleteFileAfter2Minutes(wordPath);   // Converted DOCX
+                }
+
+                //======================== WORD TO PDF ========================
+                else if (ConversionType == "Word To Pdf")
+                {
+                    string pdfFileName = Path.GetFileNameWithoutExtension(file.FileName) + ".pdf";
+                    string pdfFilePath = Path.Combine(uploadFolder, pdfFileName);
+
+                    try
+                    {
+                        // -------- Syncfusion --------
+                        using (Syncfusion.DocIO.DLS.WordDocument document =
+                               new Syncfusion.DocIO.DLS.WordDocument(filePath, Syncfusion.DocIO.FormatType.Automatic))
+                        {
+                            using (Syncfusion.DocIORenderer.DocIORenderer renderer =
+                                   new Syncfusion.DocIORenderer.DocIORenderer())
+                            {
+                                using (Syncfusion.Pdf.PdfDocument pdfDocument =
+                                       renderer.ConvertToPDF(document))
+                                {
+                                    using (FileStream outputStream = new FileStream(pdfFilePath, FileMode.Create))
+                                    {
+                                        pdfDocument.Save(outputStream);
+                                    }
+                                }
+                            }
+                        }
+                        TempData["Success"] = "Success";
+                        DeleteFileAfter2Minutes(filePath);      // Uploaded DOCX
+                        DeleteFileAfter2Minutes(pdfFilePath);   // Converted PDF
+                        
+                    }
+                    catch
+                    {
+                        // -------- Fallback Spire --------
+                        Spire.Doc.Document document = new Spire.Doc.Document();
+                        document.LoadFromFile(filePath);
+                        document.SaveToFile(pdfFilePath, Spire.Doc.FileFormat.PDF);
+                        document.Close();
+
+                        TempData["Success"] = "Success";
+                        DeleteFileAfter2Minutes(filePath);      // Uploaded DOCX
+                        DeleteFileAfter2Minutes(pdfFilePath);   // Converted PDF
+                    }
+
+                    TempData["DownloadFile"] = pdfFileName;
+
+                   
+                }
+                else
+                {
+                    TempData["Success"] = "Invalid conversion type.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Success"] = ex.Message;
+            }
+
+            return RedirectToAction(
+                "AllConveteredDocument",
                 new { type = ConversionType });
         }
 
-        string uploadFolder = Path.Combine(
-            Directory.GetCurrentDirectory(),
-            "wwwroot",
-            "Uploads");
-
-        if (!Directory.Exists(uploadFolder))
-        {
-            Directory.CreateDirectory(uploadFolder);
-        }
-
-        string filePath = Path.Combine(uploadFolder, file.FileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            file.CopyTo(stream);
-        }
-
-        try
-        {
-            if (ConversionType == "Pdf To Word")
-            {
-                string wordPath = Path.ChangeExtension(filePath, ".docx");
-
-                PdfDocument pdf = new PdfDocument();
-                pdf.LoadFromFile(filePath);
-
-                pdf.SaveToFile(wordPath, Spire.Pdf.FileFormat.DOCX);
-
-                TempData["DownloadFile"] = Path.GetFileName(wordPath);
-                TempData["Success"] = "PDF converted to Word successfully.";
-                    DeleteOldFiles(filePath);
-                }
-            else if (ConversionType == "Word To Pdf")
-            {
-                string pdfFileName =
-                    Path.GetFileNameWithoutExtension(file.FileName) + ".pdf";
-
-                string pdfFilePath =
-                    Path.Combine(uploadFolder, pdfFileName);
-
-                    Spire.Doc.Document document = new Spire.Doc.Document();
-                    document.LoadFromFile(filePath);
-
-                document.SaveToFile(
-                    pdfFilePath,
-                    Spire.Doc.FileFormat.PDF);
-
-                document.Close();
-
-                TempData["DownloadFile"] = pdfFileName;
-                TempData["Success"] = "Word converted to PDF successfully.";
-                    DeleteOldFiles(filePath);
-            }
-            else
-            {
-                TempData["Success"] = "Invalid conversion type.";
-            }
-        }
-        catch (Exception ex)
-        {
-            TempData["Success"] = ex.Message;
-        }
-
-        return RedirectToAction(
-            "AllConveteredDocument",
-            new { type = ConversionType });
-    }
 
 
-
-    [HttpGet]
+        [HttpGet]
         public IActionResult DownloadFile(string fileName)
         {
             string filePath = Path.Combine(
@@ -168,24 +197,24 @@ namespace NTConvert.Controllers
                 fileName);
         }
 
-        private void DeleteOldFiles(string uploadFolder)
+        private void DeleteFileAfter2Minutes(string filePath)
         {
-            var files = Directory.GetFiles(uploadFolder);
-
-            foreach (var file in files)
+            Task.Run(async () =>
             {
-                if (System.IO.File.GetCreationTime(file) < DateTime.Now.AddMinutes(-10))
-               
+                await Task.Delay(TimeSpan.FromMinutes(2));
+
+                try
                 {
-                    try
+                    if (System.IO.File.Exists(filePath))
                     {
-                        System.IO.File.Delete(file);
-                    }
-                    catch
-                    {
+                        System.IO.File.Delete(filePath);
                     }
                 }
-            }
+                catch
+                {
+                    // Ignore
+                }
+            });
         }
     }
 }

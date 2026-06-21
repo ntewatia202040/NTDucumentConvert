@@ -1,8 +1,15 @@
-﻿```cshtml
+﻿
 <div class="sidebar">
 
-    <div class="sidebar-logo">
-        NT Convert
+    <div class="sidebar-logo text-center">
+
+        <a asp-controller="Home" asp-action="Index">
+            <img src="~/images/AnticonvertMenu.png"
+                 asp-append-version="true"
+                 alt="AntiConvert Logo"
+                 class="img-fluid" />
+        </a>
+
     </div>
 
     <!-- DOCUMENT TOOLS -->
@@ -134,4 +141,4 @@
     </div>
 
 </div>
-```
+

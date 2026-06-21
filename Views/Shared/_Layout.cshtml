@@ -3,33 +3,87 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AntiConvert</title>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>@ViewData["Title"] | AntiConvert</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon.png" asp-append-version="true" />
+    <link rel="apple-touch-icon" href="~/favicon.png" asp-append-version="true" />
+
+    <!-- SEO -->
+    <meta name="description"
+          content="AntiConvert provides free online PDF, Word, Excel, PowerPoint and Image conversion tools. Fast, secure and easy document conversion." />
+
+    <meta name="keywords"
+          content="PDF to Word, Word to PDF, Merge PDF, Compress PDF, PDF Converter, Online PDF Tools, AntiConvert, PPT to PDF, PDF to PPT, PDF to Excel, Excel to PDF" />
+
+    <meta name="author" content="AntiConvert" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="AntiConvert" />
+    <meta property="og:description" content="Free Online Document Conversion Tools" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/logo.png" />
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NTConvert.styles.css" asp-append-version="true" />
 
-    <meta name="description"
-          content="Convert PDF to Word online for free. Fast, secure and easy PDF to DOCX conversion." />
-
-    <meta name="keywords"
-          content="PDF to Word Converter, Convert PDF to DOCX, Free PDF Converter, Online PDF Tool,PDF to Word" />
-
-    <meta name="keywords"
-          content="PDFtoWord, ConvertPDFtoDOCX, Free PDF Converter, Online PDF Tool,Wordtopdf,wordtopdf,hr salery slip" />
-
 </head>
+
 <body>
 
     @await Html.PartialAsync("_Sidebar")
 
     <div class="main-content">
 
-        <main role="main">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
 
+        <footer class="text-center mt-5 p-4 border-top">
+
+            <div class="mb-2">
+
+                <a asp-controller="Home"
+                   asp-action="About"
+                   class="text-decoration-none me-3">
+                    About Us
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Privacy"
+                   class="text-decoration-none me-3">
+                    Privacy Policy
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Terms"
+                   class="text-decoration-none me-3">
+                    Terms & Conditions
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Contact"
+                   class="text-decoration-none">
+                    Contact Us
+                </a>
+
+            </div>
+
+            <p class="mb-0">
+                © @DateTime.Now.Year AntiConvert. All Rights Reserved.
+            </p>
+
+        </footer>
+
     </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

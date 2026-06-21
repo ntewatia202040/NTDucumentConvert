@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,9 +18,15 @@
     <PackageReference Include="PDFsharp" Version="6.2.4" />
     <PackageReference Include="Spire.Doc" Version="14.6.9" />
     <PackageReference Include="Spire.PDF" Version="12.6.5" />
+    <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="33.2.13" />
+    <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.13" />
+    <PackageReference Include="Syncfusion.Licensing" Version="33.2.13" />
+    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="33.2.13" />
+    <PackageReference Include="Syncfusion.Presentation.Net.Core" Version="33.2.13" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 

@@ -18,8 +18,30 @@ namespace NTConvert.Controllers
             return View();
         }
 
-      
+        public IActionResult About()
+        {
+            return View();
+        }
 
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult Error404()
+        {
+            Response.StatusCode = 404;
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

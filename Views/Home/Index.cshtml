@@ -2,148 +2,190 @@
     ViewData["Title"] = "NT Convert";
 }
 
-<div class="hero-section">
 
-    <h1 class="display-4 fw-bold">
-        NT Convert
-    </h1>
 
-    <p class="lead">
-        All-in-One Document, PDF, Image, HR & Business Tools
-    </p>
+<div class="container py-4">
 
-    <div class="mt-4">
+    <!-- Hero Section -->
+    <div class="hero-section">
 
-        <span class="badge bg-light text-dark p-2">
-            50+ Tools
-        </span>
+        
+            <div class="d-flex align-items-center">
 
-        <span class="badge bg-light text-dark p-2">
-            Fast Conversion
-        </span>
+                <img src="~/images/AntiConvertLogo.png"
+                     alt="AntiConvert"
+                     height="50" />
 
-        <span class="badge bg-light text-dark p-2">
-            Secure Files
-        </span>
+                <span class="ms-2 fw-bold fs-4">
+                    AntiConvert
+                </span>
+
+            </div>
+        
+
+        <p class="lead">
+            All-in-One Document, PDF, Image, HR & Business Tools
+        </p>
+
+        <div class="mt-4">
+
+            <span class="badge bg-light text-dark p-2">
+                50+ Tools
+            </span>
+
+            <span class="badge bg-light text-dark p-2">
+                Fast Conversion
+            </span>
+
+            <span class="badge bg-light text-dark p-2">
+                Secure Files
+            </span>
+
+        </div>
 
     </div>
 
-</div>
+    <!-- Popular Tools -->
+    <h3 class="section-title">🔥 Popular Tools</h3>
 
-<br />
+    <div class="row">
 
-<h3>🔥 Popular Tools</h3>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a asp-controller="Tools"
+               asp-action="PdfToWord"
+               class="text-decoration-none text-dark">
 
-<div class="row">
+                <div class="card tool-card">
+                    <div class="card-body text-center">
+                        <h1>📄</h1>
+                        <h5>PDF To Word</h5>
+                    </div>
+                </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card tool-card">
-            <div class="card-body text-center">
-                <h4>📄</h4>
-                <h5>PDF To Word</h5>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a asp-controller="Tools"
+               asp-action="WordToPdf"
+               class="text-decoration-none text-dark">
+
+                <div class="card tool-card">
+                    <div class="card-body text-center">
+                        <h1>📑</h1>
+                        <h5>Word To PDF</h5>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a asp-controller="Tools"
+               asp-action="MergePdf"
+               class="text-decoration-none text-dark">
+
+                <div class="card tool-card">
+                    <div class="card-body text-center">
+                        <h1>🔗</h1>
+                        <h5>Merge PDF</h5>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a asp-controller="Tools"
+               asp-action="CompressPdf"
+               class="text-decoration-none text-dark">
+
+                <div class="card tool-card">
+                    <div class="card-body text-center">
+                        <h1>📦</h1>
+                        <h5>Compress PDF</h5>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Categories -->
+    <h3 class="section-title">📂 Categories</h3>
+
+    <div class="row">
+
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                📄 PDF Tools
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card tool-card">
-            <div class="card-body text-center">
-                <h4>📑</h4>
-                <h5>Word To PDF</h5>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                🖼 Image Tools
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card tool-card">
-            <div class="card-body text-center">
-                <h4>🔗</h4>
-                <h5>Merge PDF</h5>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                💼 HR Tools
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card tool-card">
-            <div class="card-body text-center">
-                <h4>📦</h4>
-                <h5>Compress PDF</h5>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                💰 Finance Tools
             </div>
         </div>
-    </div>
 
-</div>
-
-<h3 class="mt-4">📂 Categories</h3>
-
-<div class="row">
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            📄 PDF Tools
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            🖼 Image Tools
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            💼 HR Tools
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            💰 Finance Tools
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            🏢 Business Tools
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-3">
-        <div class="card text-center p-3">
-            ⚙ Developer Tools
-        </div>
-    </div>
-
-</div>
-
-<div class="card mt-4">
-
-    <div class="card-body">
-
-        <h3>Why Choose NT Convert?</h3>
-
-        <hr />
-
-        <div class="row">
-
-            <div class="col-md-3 text-center">
-                <h1>⚡</h1>
-                <h5>Fast</h5>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                🏢 Business Tools
             </div>
+        </div>
 
-            <div class="col-md-3 text-center">
-                <h1>🔒</h1>
-                <h5>Secure</h5>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+            <div class="card category-card text-center p-3">
+                ⚙ Developer Tools
             </div>
+        </div>
 
-            <div class="col-md-3 text-center">
-                <h1>☁</h1>
-                <h5>Cloud Based</h5>
-            </div>
+    </div>
 
-            <div class="col-md-3 text-center">
-                <h1>🆓</h1>
-                <h5>Free Tools</h5>
+    <!-- Why Choose -->
+    <div class="card mt-5 shadow-sm border-0">
+
+        <div class="card-body">
+
+            <h3 class="text-center mb-4">
+                Why Choose NT Convert?
+            </h3>
+
+            <div class="row text-center">
+
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="feature-icon">⚡</div>
+                    <h5>Fast</h5>
+                </div>
+
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="feature-icon">🔒</div>
+                    <h5>Secure</h5>
+                </div>
+
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="feature-icon">☁</div>
+                    <h5>Cloud Based</h5>
+                </div>
+
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="feature-icon">🆓</div>
+                    <h5>Free Tools</h5>
+                </div>
+
             </div>
 
         </div>
