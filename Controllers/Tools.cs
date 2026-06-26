@@ -1,9 +1,12 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.Pdf;
+using Syncfusion.XlsIO;
+using Syncfusion.XlsIORenderer;
+
 
 
 
@@ -70,21 +73,17 @@ namespace NTConvert.Controllers
             if (file == null || file.Length == 0)
             {
                 TempData["Success"] = "Please select a file.";
-                return RedirectToAction("AllConveteredDocument",
-                    new { type = ConversionType });
+                return RedirectToAction("AllConveteredDocument", new { type = ConversionType });
             }
 
-            string uploadFolder = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                "Uploads");
+            string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
 
             if (!Directory.Exists(uploadFolder))
-            {
                 Directory.CreateDirectory(uploadFolder);
-            }
 
-            string filePath = Path.Combine(uploadFolder, file.FileName);
+            // Unique file name to avoid overwrite
+            string uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -93,70 +92,91 @@ namespace NTConvert.Controllers
 
             try
             {
-                //======================== PDF TO WORD ========================
+                // ===================== PDF TO WORD =====================
                 if (ConversionType == "Pdf To Word")
                 {
-                    string wordPath = Path.ChangeExtension(filePath, ".docx");
+                    string wordFileName = Path.GetFileNameWithoutExtension(uniqueFileName) + ".docx";
+                    string wordPath = Path.Combine(uploadFolder, wordFileName);
 
-                    Spire.Pdf.PdfDocument pdf = new Spire.Pdf.PdfDocument();
-                    pdf.LoadFromFile(filePath);
+                    using (var client = new HttpClient())
+                    {
+                        using (var form = new MultipartFormDataContent())
+                        {
+                            form.Add(
+                                new ByteArrayContent(System.IO.File.ReadAllBytes(filePath)),
+                                "file",
+                                Path.GetFileName(filePath)
+                            );
 
-                    pdf.SaveToFile(wordPath, Spire.Pdf.FileFormat.DOCX);
-                    pdf.Close();
+                            var response = client.PostAsync(
+                                "http://localhost:8080/api/v1/convert/pdf/docx",
+                                form
+                            ).Result;
 
-                    TempData["DownloadFile"] = Path.GetFileName(wordPath);
-                    TempData["Success"] = "PDF converted to Word successfully.";
+                            var bytes = response.Content.ReadAsByteArrayAsync().Result;
+                            System.IO.File.WriteAllBytes(wordPath, bytes);
+                        }
+                    }
 
-                    DeleteFileAfter2Minutes(filePath);   // Uploaded PDF
-                    DeleteFileAfter2Minutes(wordPath);   // Converted DOCX
+                    TempData["DownloadFile"] = wordFileName;
+                    TempData["Success"] = "PDF converted to Word successfully (API).";
+
+                    DeleteFileAfter2Minutes(filePath);
+                    DeleteFileAfter2Minutes(wordPath);
                 }
 
-                //======================== WORD TO PDF ========================
+                // ===================== WORD TO PDF =====================
                 else if (ConversionType == "Word To Pdf")
                 {
-                    string pdfFileName = Path.GetFileNameWithoutExtension(file.FileName) + ".pdf";
+                    string pdfFileName = Path.GetFileNameWithoutExtension(uniqueFileName) + ".pdf";
                     string pdfFilePath = Path.Combine(uploadFolder, pdfFileName);
 
-                    try
+                    using (var document = new Syncfusion.DocIO.DLS.WordDocument(filePath, Syncfusion.DocIO.FormatType.Automatic))
+                    using (var renderer = new Syncfusion.DocIORenderer.DocIORenderer())
+                    using (var pdfDoc = renderer.ConvertToPDF(document))
+                    using (var output = new FileStream(pdfFilePath, FileMode.Create))
                     {
-                        // -------- Syncfusion --------
-                        using (Syncfusion.DocIO.DLS.WordDocument document =
-                               new Syncfusion.DocIO.DLS.WordDocument(filePath, Syncfusion.DocIO.FormatType.Automatic))
-                        {
-                            using (Syncfusion.DocIORenderer.DocIORenderer renderer =
-                                   new Syncfusion.DocIORenderer.DocIORenderer())
-                            {
-                                using (Syncfusion.Pdf.PdfDocument pdfDocument =
-                                       renderer.ConvertToPDF(document))
-                                {
-                                    using (FileStream outputStream = new FileStream(pdfFilePath, FileMode.Create))
-                                    {
-                                        pdfDocument.Save(outputStream);
-                                    }
-                                }
-                            }
-                        }
-                        TempData["Success"] = "Success";
-                        DeleteFileAfter2Minutes(filePath);      // Uploaded DOCX
-                        DeleteFileAfter2Minutes(pdfFilePath);   // Converted PDF
-                        
-                    }
-                    catch
-                    {
-                        // -------- Fallback Spire --------
-                        Spire.Doc.Document document = new Spire.Doc.Document();
-                        document.LoadFromFile(filePath);
-                        document.SaveToFile(pdfFilePath, Spire.Doc.FileFormat.PDF);
-                        document.Close();
-
-                        TempData["Success"] = "Success";
-                        DeleteFileAfter2Minutes(filePath);      // Uploaded DOCX
-                        DeleteFileAfter2Minutes(pdfFilePath);   // Converted PDF
+                        pdfDoc.Save(output);
                     }
 
                     TempData["DownloadFile"] = pdfFileName;
+                    TempData["Success"] = "Word converted to PDF successfully.";
 
-                   
+                    DeleteFileAfter2Minutes(filePath);
+                    DeleteFileAfter2Minutes(pdfFilePath);
+                }
+
+                // ===================== EXCEL TO PDF =====================
+                else if (ConversionType == "Excel To Pdf")
+                {
+                    string pdfFileName = Path.GetFileNameWithoutExtension(uniqueFileName) + ".pdf";
+                    string pdfFilePath = Path.Combine(uploadFolder, pdfFileName);
+
+                    using (ExcelEngine excelEngine = new ExcelEngine())
+                    {
+                        IApplication application = excelEngine.Excel;
+                        application.DefaultVersion = ExcelVersion.Xlsx;
+
+                        using (FileStream inputStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                        {
+                            IWorkbook workbook = application.Workbooks.Open(inputStream);
+
+                            XlsIORenderer renderer = new XlsIORenderer();
+                            using (Syncfusion.Pdf.PdfDocument pdfDocument = renderer.ConvertToPDF(workbook))
+                            using (FileStream outputStream = new FileStream(pdfFilePath, FileMode.Create))
+                            {
+                                pdfDocument.Save(outputStream);
+                            }
+
+                            workbook.Close();
+                        }
+                    }
+
+                    TempData["DownloadFile"] = pdfFileName;
+                    TempData["Success"] = "Excel converted to PDF successfully.";
+
+                    DeleteFileAfter2Minutes(filePath);
+                    DeleteFileAfter2Minutes(pdfFilePath);
                 }
                 else
                 {
@@ -165,12 +185,10 @@ namespace NTConvert.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Success"] = ex.Message;
+                TempData["Success"] = "Error: " + ex.Message;
             }
 
-            return RedirectToAction(
-                "AllConveteredDocument",
-                new { type = ConversionType });
+            return RedirectToAction("AllConveteredDocument", new { type = ConversionType });
         }
 
 
@@ -185,16 +203,20 @@ namespace NTConvert.Controllers
                 fileName);
 
             if (!System.IO.File.Exists(filePath))
-            {
                 return NotFound();
-            }
 
-            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            var extension = Path.GetExtension(fileName).ToLower();
 
-            return File(
-                bytes,
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                fileName);
+            string contentType = extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                _ => "application/octet-stream"
+            };
+
+            return File(bytes, contentType, fileName);
         }
 
         private void DeleteFileAfter2Minutes(string filePath)
